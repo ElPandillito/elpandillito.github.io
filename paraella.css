@@ -1,0 +1,7 @@
+/* Estilos extra SOLO para para-ella.html */
+.page-hero{
+  min-height:58vh;
+}
+.card-media img{
+  object-position:center 12%;
+}

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inicio | Hombre | JOSSA ATHLETICS</title>
+  <link rel="stylesheet" href="outfit.css" />
+  <style>
+    .size-picker{
+      margin-top:16px;
+      padding:12px 14px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:12px;
+      background: rgba(255,255,255,.04);
+      max-width:320px;
+    }
+    .size-picker__label{
+      font-size:14px;
+      opacity:.8;
+      margin-bottom:8px;
+    }
+    .size-picker__options{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .size-btn{
+      padding:10px 14px;
+      border-radius:10px;
+      border:1px solid #444;
+      background:#0d0d0d;
+      color:#fff;
+      cursor:pointer;
+      transition:all .15s ease;
+      letter-spacing:.04em;
+      font-weight:700;
+    }
+    .size-btn:hover{ border-color:#888; transform:translateY(-1px); }
+    .size-btn.is-active{ background:#fff; color:#0d0d0d; border-color:#fff; box-shadow:0 8px 26px rgba(0,0,0,.35); }
+  </style>
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="wrap">
+      <a class="brand" href="index.html">JOSSA ATHLETICS</a>
+      <nav class="navlinks">
+        <a href="index.html#inicio">Inicio</a>
+        <a href="index.html#colecciones">Colecciones</a>
+        <a href="index.html#contacto">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="page-hero">
+    <div class="wrap">
+      <div>
+        <h1>INICIO</h1>
+        <p>Drop base de la linea hombre. Fit oversize, logo frontal limpio.</p>
+        <div class="size-picker" data-selected="M">
+          <div class="size-picker__label">Talla seleccionada: <span class="size-picker__value">M</span></div>
+          <div class="size-picker__options">
+            <button class="size-btn" data-size="S">S</button>
+            <button class="size-btn" data-size="M">M</button>
+            <button class="size-btn" data-size="G">G</button>
+            <button class="size-btn" data-size="XL">XL</button>
+          </div>
+        </div>
+        <div class="page-actions" style="margin-top:14px;">
+          <a class="btn btn-primary" href="#galeria">Ver galeria</a>
+          <a class="btn btn-ghost" href="hombre.html">Volver a Hombre</a>
+        </div>
+      </div>
+
+      <div class="page-actions">
+          <a class="btn btn-primary"
+           target="_blank" rel="noopener"
+           href="https://wa.me/523332510644?text=Hola%20JOSSA%20ATHLETICS%20%F0%9F%91%8B%0AQuiero%20comprar%20el%20outfit%20INICIO.%0A%0ADatos:%0A1)%20Nombre%20completo:%0A2)%20Talla:%0A3)%20Ciudad:%0A4)%20Direcci%C3%B3n%20de%20env%C3%ADo:%0A5)%20M%C3%A9todo%20de%20pago:">
+            Comprar por WhatsApp
+          </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery" id="galeria">
+    <div class="wrap">
+      <div class="gallery-head">
+        <h2>GALERIA</h2>
+        <p>Fotos del outfit Inicio.</p>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="photo">
+          <a href="images/hombre/inicio-01.jpg" target="_blank" rel="noopener">
+            <img src="images/hombre/inicio-01.jpg" alt="Inicio 01" />
+          </a>
+        </div>
+        <div class="photo">
+          <a href="images/hombre/inicio-02.jpg" target="_blank" rel="noopener">
+            <img src="images/hombre/inicio-02.jpg" alt="Inicio 02" />
+          </a>
+        </div>
+        <div class="photo"><img src="images/hombre/inicio-03.jpg" alt="Inicio 03" /></div>
+        <div class="photo"><img src="images/hombre/inicio-04.jpg" alt="Inicio 04" /></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <div class="footer-left">
+        <div class="footer-brand">JOSSA ATHLETICS</div>
+        <p>Performance. Lifestyle. Identidad.</p>
+      </div>
+      <div class="footer-right">
+        <a class="social" target="_blank" rel="noopener" href="https://www.instagram.com/jossa_athleticsmx/">Instagram</a>
+        <a class="social" target="_blank" rel="noopener" href="https://www.tiktok.com/@jossa_athletics">TikTok</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function initSizePickers(){
+      document.querySelectorAll('.size-picker').forEach(picker => {
+        const buttons = picker.querySelectorAll('.size-btn');
+        const output = picker.querySelector('.size-picker__value');
+        let selected = picker.dataset.selected || 'M';
+
+        const setSelected = (size) => {
+          selected = size;
+          output.textContent = size;
+          buttons.forEach(btn => btn.classList.toggle('is-active', btn.dataset.size === size));
+          console.log('Talla seleccionada (INICIO):', size);
+        };
+
+        buttons.forEach(btn => btn.addEventListener('click', () => setSelected(btn.dataset.size)));
+        setSelected(selected);
+      });
+    })();
+  </script>
+</body>
+</html>
