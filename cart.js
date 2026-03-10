@@ -1,13 +1,41 @@
 (() => {
   const CART_KEY = 'jossa_cart_v1';
   const CODE_KEY = 'jossa_cart_code';
+  const PRICE_BY_PRODUCT = {
+    'INICIO': 699,
+    'DARK LEGACY': 499,
+    'DARK LEGACY MUJER': 499,
+    'ASCENSO': 189,
+    'SHORT AURA': 269,
+    'NOVA SHORTS': 269
+  };
   let cart = [];
   let discountCode = '';
   let ui = {};
+  let animatedTotal = 0;
+  let totalAnimationFrame = null;
+
+  const normalizeProductName = (name = '') =>
+    name
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toUpperCase();
+
+  const parsePriceValue = (text = '') => {
+    const digits = String(text).replace(/[^\d]/g, '');
+    return digits ? Number(digits) : 0;
+  };
+
+  const getPriceByName = (name = '') => PRICE_BY_PRODUCT[normalizeProductName(name)] || 0;
+  const formatMoney = (value = 0) => `$${Math.round(value).toLocaleString('es-MX')} MXN`;
+  const getUnitPrice = (item) => Number(item?.unitPrice) || getPriceByName(item?.name);
+  const getCartSubtotal = () => cart.reduce((acc, item) => acc + (getUnitPrice(item) * item.qty), 0);
 
   const load = () => {
     try { cart = JSON.parse(localStorage.getItem(CART_KEY)) || []; }
     catch { cart = []; }
+    cart = cart.map(item => ({ ...item, unitPrice: getUnitPrice(item) }));
     try { discountCode = localStorage.getItem(CODE_KEY) || ''; }
     catch { discountCode = ''; }
   };
@@ -49,6 +77,10 @@
           <div class="summary-line">
             <span>Artículos</span>
             <span class="summary-items">0</span>
+          </div>
+          <div class="summary-line summary-line-total">
+            <span>Total</span>
+            <span class="summary-total">$0 MXN</span>
           </div>
           <div class="summary-line">
             <span>Código</span>
@@ -92,6 +124,7 @@
       codeInput: root.querySelector('#cart-code-input'),
       codeApply: root.querySelector('.cart-apply'),
       summaryItems: root.querySelector('.summary-items'),
+      summaryTotal: root.querySelector('.summary-total'),
       summaryCode: root.querySelector('.summary-code'),
     };
     const toggleHandler = () => root.classList.toggle('is-open');
@@ -108,14 +141,55 @@
     });
   };
 
-  const render = () => {
+  const animateSummaryTotal = (target, { instant = false } = {}) => {
+    if (!ui.summaryTotal) return;
+    const next = Number(target) || 0;
+    if (totalAnimationFrame) cancelAnimationFrame(totalAnimationFrame);
+    if (instant) {
+      animatedTotal = next;
+      ui.summaryTotal.textContent = formatMoney(next);
+      return;
+    }
+    const start = Number(animatedTotal) || 0;
+    if (start === next) {
+      ui.summaryTotal.textContent = formatMoney(next);
+      return;
+    }
+    const diff = Math.abs(next - start);
+    const duration = Math.min(900, Math.max(300, 280 + diff * 0.8));
+    const startTime = performance.now();
+    ui.summaryTotal.classList.remove('is-bump');
+    // Force reflow so the bump animation can replay on each change.
+    void ui.summaryTotal.offsetWidth;
+    ui.summaryTotal.classList.add('is-bump');
+
+    const frame = (now) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = start + (next - start) * eased;
+      animatedTotal = current;
+      ui.summaryTotal.textContent = formatMoney(current);
+      if (progress < 1) {
+        totalAnimationFrame = requestAnimationFrame(frame);
+      } else {
+        animatedTotal = next;
+        ui.summaryTotal.textContent = formatMoney(next);
+        totalAnimationFrame = null;
+      }
+    };
+    totalAnimationFrame = requestAnimationFrame(frame);
+  };
+
+  const render = ({ instantTotal = false } = {}) => {
     if (!ui.items) return;
     const count = cart.reduce((acc, item) => acc + item.qty, 0);
+    const subtotal = getCartSubtotal();
     const countEl = ui.toggle.querySelector('.cart-count');
     if (countEl) countEl.textContent = count;
     if (!cart.length) {
       ui.items.innerHTML = `<p class="cart-empty">Tu carrito está vacío.</p>`;
       if (ui.summaryItems) ui.summaryItems.textContent = '0';
+      animateSummaryTotal(0, { instant: instantTotal });
       if (ui.summaryCode) ui.summaryCode.textContent = '—';
       return;
     }
@@ -126,7 +200,8 @@
         </a>
         <div class="cart-meta">
           <div class="cart-name">${item.name}</div>
-          <div class="cart-size">Talla: ${item.size}</div>
+          <div class="cart-size">Talla: ${item.size} | Cant: ${item.qty}</div>
+          <div class="cart-price">${formatMoney(getUnitPrice(item))} c/u</div>
         </div>
         <button class="cart-remove" data-idx="${idx}" aria-label="Eliminar">×</button>
       </div>
@@ -141,15 +216,34 @@
 
     if (ui.codeInput) ui.codeInput.value = discountCode;
     if (ui.summaryItems) ui.summaryItems.textContent = `${count}`;
+    animateSummaryTotal(subtotal, { instant: instantTotal });
     if (ui.summaryCode) ui.summaryCode.textContent = discountCode ? discountCode : '—';
   };
 
-  const addItem = ({ id, name, size, image, link }) => {
+  const getPriceFromButton = (btn, productName) => {
+    const direct = parsePriceValue(btn?.dataset?.price || '');
+    if (direct) return direct;
+
+    const section = btn?.closest('.page-hero, .product-card, .card, section, body') || document.body;
+    const priceEl = section.querySelector('.price-tag, .price');
+    const visible = parsePriceValue(priceEl?.textContent || '');
+    if (visible) return visible;
+
+    return getPriceByName(productName);
+  };
+
+  const addItem = ({ id, name, size, image, link, unitPrice }) => {
     if (!size) return alert('Selecciona una talla antes de agregar.');
     const existing = cart.find(i => i.id === id && i.size === size);
-    if (existing) existing.qty += 1;
-    else cart.push({ id, name, size, image, link, qty: 1 });
-    save(); render(); openDrawer();
+    if (existing) {
+      existing.qty += 1;
+      if (!Number(existing.unitPrice)) existing.unitPrice = unitPrice || getPriceByName(name);
+    } else {
+      cart.push({ id, name, size, image, link, qty: 1, unitPrice: unitPrice || getPriceByName(name) });
+    }
+    save();
+    render();
+    openDrawer();
   };
 
   const openDrawer = () => ui.root?.classList.add('is-open');
@@ -175,11 +269,14 @@
   const checkout = () => {
     if (!cart.length) return alert('Tu carrito está vacío.');
     const lines = cart.map((item, i) =>
-      `${i + 1}) ${item.name} | Talla: ${item.size} | Cant: ${item.qty}`);
+      `${i + 1}) ${item.name} | Talla: ${item.size} | Cant: ${item.qty} | ${formatMoney(getUnitPrice(item))} c/u`);
+    const subtotal = getCartSubtotal();
     const msg = [
       'Hola JOSSA ATHLETICS 👋',
       'Pedido desde el sitio:',
       ...lines,
+      '',
+      `Total estimado: ${formatMoney(subtotal)}`,
       discountCode ? `Código: ${discountCode}` : '',
       '',
       'Envío:',
@@ -197,12 +294,15 @@
       btn.addEventListener('click', () => {
         const sizeEl = btn.closest('body').querySelector('.size-picker__value');
         const size = sizeEl ? sizeEl.textContent.trim() : '';
+        const productName = btn.dataset.product || 'Producto';
+        const unitPrice = getPriceFromButton(btn, productName);
         addItem({
           id: `${btn.dataset.product || 'ITEM'}-${size}`,
-          name: btn.dataset.product || 'Producto',
+          name: productName,
           size,
           image: btn.dataset.image || '',
-          link: btn.dataset.link || location.pathname
+          link: btn.dataset.link || location.pathname,
+          unitPrice
         });
       });
     });
@@ -211,7 +311,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     createUI();
     load();
-    render();
+    render({ instantTotal: true });
     initSizePickers();
     attachButtons();
   });

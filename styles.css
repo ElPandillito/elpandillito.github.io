@@ -415,7 +415,27 @@ img{ display:block; max-width:100%; }
   letter-spacing:.12em;
   text-transform:uppercase;
 }
-.price{ font-weight:800; opacity:.82; }
+.price{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  width:fit-content;
+  margin-top:12px;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,214,102,.45);
+  background: linear-gradient(135deg, #ffe27a, #ff9f1a);
+  color:#111;
+  font-weight:950;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  box-shadow: 0 8px 24px rgba(255,159,26,.35);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.card:hover .price{
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(255,159,26,.45);
+}
 .size-label{ font-size:.85rem; opacity:.78; }
 .size-select{
   padding:10px 12px;
