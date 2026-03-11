@@ -27,7 +27,18 @@
       <div>
         <h1>SHORT AURA</h1>
         <p>Shorts de mujer de tiro alto: compresión cómoda, ajuste firme y movimiento libre.</p>
+        <p>Disponible en colores: amarillo, gris, rosa y blanco.</p>
         <p class="price-tag">Precio: $269</p>
+
+        <div class="color-row">
+          <div class="color-selected">Color seleccionado: <strong id="aura-color-value">Blanco</strong></div>
+          <div class="aura-colors" role="tablist" aria-label="Colores del Short AURA">
+            <button class="aura-color aura-color--blanco is-active" type="button" data-color="blanco">Blanco</button>
+            <button class="aura-color aura-color--amarillo" type="button" data-color="amarillo">Amarillo</button>
+            <button class="aura-color aura-color--gris" type="button" data-color="gris">Gris</button>
+            <button class="aura-color aura-color--rosa" type="button" data-color="rosa">Rosa</button>
+          </div>
+        </div>
 
         <div class="size-row">
           <div class="size-picker" data-selected="S">
@@ -40,7 +51,7 @@
           <a class="size-guide-btn" href="#guia-tallas">Guía de tallas</a>
         </div>
         <div class="cart-actions">
-          <button class="btn btn-primary add-to-cart" data-product="SHORT AURA" data-image="images/ella/nova-01.jpg">Añadir al carrito</button>
+          <button class="btn btn-primary add-to-cart" data-product="SHORT AURA BLANCO" data-image="images/ella/aura-blanco-01.jpg">Añadir al carrito</button>
         </div>
 
         <div class="page-actions" style="margin-top:14px;">
@@ -64,42 +75,17 @@
     <div class="wrap">
       <div class="gallery-head">
         <h2>GALERÍA</h2>
-        <p>Color blanco, fit de compresión y look clean para entrenamiento y lifestyle.</p>
+        <p id="aura-gallery-copy">Short AURA en color blanco. Fit de compresión y look clean para entrenamiento y lifestyle.</p>
       </div>
 
       <div class="nova-gallery" id="nova-gallery">
         <div class="nova-main photo">
-          <a id="nova-main-link" href="images/ella/nova-01.jpg" target="_blank" rel="noopener">
-            <img id="nova-main-image" class="face-focus" src="images/ella/nova-01.jpg" alt="Nova Shorts 01" style="object-position:center center;" onerror="this.onerror=null;this.src='images/ella/esencia-01.jpg';">
+          <a id="nova-main-link" href="images/ella/aura-blanco-01.jpg" target="_blank" rel="noopener">
+            <img id="nova-main-image" class="face-focus" src="images/ella/aura-blanco-01.jpg" alt="Short AURA Blanco 01" style="object-position:center 12%;" onerror="this.onerror=null;this.src='images/ella/esencia-01.jpg';">
           </a>
         </div>
 
-        <div class="nova-thumbs" role="tablist" aria-label="Miniaturas de la colección Nova">
-          <button class="nova-thumb is-active" type="button" data-full="images/ella/nova-01.jpg" data-alt="Nova Shorts 01" data-pos="center center">
-            <img src="images/ella/nova-01.jpg" alt="Miniatura Nova 01" onerror="this.onerror=null;this.src='images/ella/esencia-01.jpg';">
-          </button>
-          <button class="nova-thumb" type="button" data-full="images/ella/nova-02.jpg" data-alt="Nova Shorts 02" data-pos="center 12%">
-            <img src="images/ella/nova-02.jpg" alt="Miniatura Nova 02" onerror="this.onerror=null;this.src='images/ella/esencia-02.jpg';">
-          </button>
-          <button class="nova-thumb" type="button" data-full="images/ella/nova-03.jpg" data-alt="Nova Shorts 03" data-pos="center 12%">
-            <img src="images/ella/nova-03.jpg" alt="Miniatura Nova 03" onerror="this.onerror=null;this.src='images/ella/esencia-01.jpg';">
-          </button>
-          <button class="nova-thumb" type="button" data-full="images/ella/nova-04.jpg" data-alt="Nova Shorts 04" data-pos="center 12%">
-            <img src="images/ella/nova-04.jpg" alt="Miniatura Nova 04" onerror="this.onerror=null;this.src='images/ella/esencia-02.jpg';">
-          </button>
-          <button class="nova-thumb" type="button" data-full="images/ella/nova-05.jpg" data-alt="Nova Shorts 05" data-pos="center 12%">
-            <img src="images/ella/nova-05.jpg" alt="Miniatura Nova 05" onerror="this.onerror=null;this.src='images/ella/dark-legacy-01.jpg';">
-          </button>
-          <button class="nova-thumb" type="button" data-full="images/ella/nova-06.jpg" data-alt="Nova Shorts 06" data-pos="center 12%">
-            <img src="images/ella/nova-06.jpg" alt="Miniatura Nova 06" onerror="this.onerror=null;this.src='images/ella/dark-legacy-01.jpg';">
-          </button>
-          <button class="nova-thumb" type="button" data-full="images/ella/nova-07.jpg" data-alt="Nova Shorts 07" data-pos="center 12%">
-            <img src="images/ella/nova-07.jpg" alt="Miniatura Nova 07" onerror="this.onerror=null;this.src='images/ella/dark-legacy-02.jpg';">
-          </button>
-          <button class="nova-thumb" type="button" data-full="images/ella/nova-08.jpg" data-alt="Nova Shorts 08" data-pos="center 12%">
-            <img src="images/ella/nova-08.jpg" alt="Miniatura Nova 08" onerror="this.onerror=null;this.src='images/ella/dark-legacy-03.jpg';">
-          </button>
-        </div>
+        <div class="nova-thumbs" id="nova-thumbs" role="tablist" aria-label="Miniaturas de la colección AURA"></div>
       </div>
     </div>
   </section>
@@ -108,7 +94,7 @@
     <div class="wrap">
       <div class="gallery-head">
         <h2>GUÍA DE TALLAS</h2>
-        <p>Medidas del producto en centímetros para Nova Shorts.</p>
+        <p>Medidas del producto en centímetros para Short AURA.</p>
       </div>
       <div class="size-specs">
         <h3>Características del producto</h3>
@@ -191,24 +177,142 @@
 
       const mainImage = document.getElementById('nova-main-image');
       const mainLink = document.getElementById('nova-main-link');
-      const thumbs = Array.from(gallery.querySelectorAll('.nova-thumb'));
+      const thumbsWrap = document.getElementById('nova-thumbs');
+      const colorButtons = Array.from(document.querySelectorAll('.aura-color'));
+      const colorValue = document.getElementById('aura-color-value');
+      const galleryCopy = document.getElementById('aura-gallery-copy');
+      const addToCart = document.querySelector('.add-to-cart[data-product]');
 
-      const setActive = (thumb) => {
-        thumbs.forEach(t => t.classList.remove('is-active'));
-        thumb.classList.add('is-active');
+      if (!thumbsWrap || !colorButtons.length) return;
 
-        const full = thumb.dataset.full || '';
-        const alt = thumb.dataset.alt || 'Nova Shorts';
-        const pos = thumb.dataset.pos || 'center 12%';
+      const fallbackImage = 'images/ella/esencia-01.jpg';
+      // Convención para que solo subas tus fotos:
+      // images/ella/aura-blanco-01.jpg, aura-blanco-02.jpg, aura-blanco-03.jpg ...
+      // images/ella/aura-amarillo-01.jpg, aura-amarillo-02.jpg, aura-amarillo-03.jpg ...
+      // images/ella/aura-gris-01.jpg, aura-gris-02.jpg, aura-gris-03.jpg ...
+      // images/ella/aura-rosa-01.jpg, aura-rosa-02.jpg, aura-rosa-03.jpg ...
+      // Puedes subir 4, 8, 12, etc. (se detectan automáticamente en orden).
+      const imageCacheByColor = {};
+      let colorRequestId = 0;
+
+      const colorMeta = {
+        blanco: { label: 'Blanco' },
+        amarillo: { label: 'Amarillo' },
+        gris: { label: 'Gris' },
+        rosa: { label: 'Rosa' }
+      };
+
+      const imageExists = (src) =>
+        new Promise((resolve) => {
+          const probe = new Image();
+          probe.onload = () => resolve(true);
+          probe.onerror = () => resolve(false);
+          probe.src = src;
+        });
+
+      const findImageByBase = async (basePath) => {
+        const extensions = ['jpg', 'jpeg', 'png', 'webp'];
+        for (const ext of extensions) {
+          const candidate = `${basePath}.${ext}`;
+          // eslint-disable-next-line no-await-in-loop
+          if (await imageExists(candidate)) return candidate;
+        }
+        return '';
+      };
+
+      const resolveColorImages = async (slug) => {
+        if (imageCacheByColor[slug]) return imageCacheByColor[slug];
+        const images = [];
+        let misses = 0;
+        const MAX_IMAGES = 40;
+        for (let index = 1; index <= MAX_IMAGES; index += 1) {
+          const base = `images/ella/aura-${slug}-${String(index).padStart(2, '0')}`;
+          // eslint-disable-next-line no-await-in-loop
+          const found = await findImageByBase(base);
+          if (found) {
+            images.push(found);
+            misses = 0;
+          } else if (images.length > 0) {
+            misses += 1;
+            if (misses >= 3) break;
+          }
+        }
+        imageCacheByColor[slug] = images;
+        return images;
+      };
+
+      const setMain = (full, alt, pos = 'center 12%') => {
         mainImage.src = full;
         mainImage.alt = alt;
         mainImage.style.objectPosition = pos;
         mainLink.href = full;
       };
 
-      thumbs.forEach(thumb => {
-        thumb.addEventListener('click', () => setActive(thumb));
+      const setColor = async (colorKey) => {
+        const requestId = ++colorRequestId;
+
+        const meta = colorMeta[colorKey] || { label: 'Color' };
+        if (colorValue) colorValue.textContent = meta.label;
+        if (galleryCopy) {
+          galleryCopy.textContent = `Short AURA en color ${meta.label.toLowerCase()}. Fit de compresión y look clean para entrenamiento y lifestyle.`;
+        }
+        if (addToCart) {
+          addToCart.dataset.product = `SHORT AURA ${meta.label.toUpperCase()}`;
+        }
+
+        colorButtons.forEach(button => {
+          button.classList.toggle('is-active', button.dataset.color === colorKey);
+        });
+
+        thumbsWrap.innerHTML = '<div class="aura-loading">Cargando fotos...</div>';
+
+        const images = await resolveColorImages(colorKey);
+        if (requestId !== colorRequestId) return;
+
+        if (!images.length) {
+          thumbsWrap.innerHTML = '<div class="aura-loading">Agrega imágenes para este color en images/ella.</div>';
+          setMain(fallbackImage, `Short AURA ${meta.label}`, 'center 12%');
+          if (addToCart) addToCart.dataset.image = fallbackImage;
+          return;
+        }
+
+        thumbsWrap.innerHTML = '';
+        images.forEach((imagePath, index) => {
+          const thumb = document.createElement('button');
+          thumb.type = 'button';
+          thumb.className = `nova-thumb${index === 0 ? ' is-active' : ''}`;
+          thumb.dataset.full = imagePath;
+          thumb.dataset.alt = `Short AURA ${meta.label} ${String(index + 1).padStart(2, '0')}`;
+          thumb.dataset.pos = 'center 12%';
+          thumb.setAttribute('aria-label', `Ver foto ${index + 1} en color ${meta.label.toLowerCase()}`);
+          thumb.innerHTML = `<img src="${imagePath}" alt="Miniatura Short AURA ${meta.label} ${String(index + 1).padStart(2, '0')}">`;
+
+          const thumbImg = thumb.querySelector('img');
+          if (thumbImg) {
+            thumbImg.onerror = () => {
+              thumbImg.onerror = null;
+              thumbImg.src = fallbackImage;
+            };
+          }
+
+          thumb.addEventListener('click', () => {
+            Array.from(thumbsWrap.querySelectorAll('.nova-thumb')).forEach(t => t.classList.remove('is-active'));
+            thumb.classList.add('is-active');
+            setMain(thumb.dataset.full || fallbackImage, thumb.dataset.alt || 'Short AURA', thumb.dataset.pos || 'center 12%');
+          });
+          thumbsWrap.appendChild(thumb);
+        });
+
+        setMain(images[0], `Short AURA ${meta.label} 01`, 'center 12%');
+        if (addToCart) addToCart.dataset.image = images[0];
+      };
+
+      colorButtons.forEach(button => {
+        button.addEventListener('click', () => setColor(button.dataset.color || 'blanco'));
       });
+
+      const initialColor = colorButtons.find(button => button.classList.contains('is-active'))?.dataset.color || 'blanco';
+      setColor(initialColor);
     })();
   </script>
   <script src="cart.js"></script>

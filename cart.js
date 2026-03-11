@@ -7,6 +7,10 @@
     'DARK LEGACY MUJER': 499,
     'ASCENSO': 189,
     'SHORT AURA': 269,
+    'SHORT AURA BLANCO': 269,
+    'SHORT AURA AMARILLO': 269,
+    'SHORT AURA GRIS': 269,
+    'SHORT AURA ROSA': 269,
     'NOVA SHORTS': 269
   };
   let cart = [];
