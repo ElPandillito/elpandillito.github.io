@@ -2,7 +2,7 @@
   const CART_KEY = 'jossa_cart_v1';
   const CODE_KEY = 'jossa_cart_code';
   const DISCOUNT_RATE = 0.10;
-  const VALID_DISCOUNT_CODES = new Set(['WANDAFIT10', 'KAREN10', 'KARENG']);
+  const VALID_DISCOUNT_CODES = new Set(['WANDAFIT', 'KAREN10', 'KARENG']);
   const PRICE_BY_PRODUCT = {
     'INICIO': 599,
     'DARK LEGACY': 499,
@@ -45,6 +45,13 @@
   const formatDiscountMoney = (value = 0) => `-${formatMoney(value)}`;
   const normalizeDiscountCode = (code = '') => String(code).trim().toUpperCase().replace(/\s+/g, '');
   const isValidDiscountCode = (code = '') => VALID_DISCOUNT_CODES.has(normalizeDiscountCode(code));
+  const getDiscountCodeStatus = (code = '') => {
+    const normalized = normalizeDiscountCode(code);
+    if (!normalized) return 'idle';
+    if (isValidDiscountCode(normalized)) return 'valid';
+    if ([...VALID_DISCOUNT_CODES].some(validCode => validCode.startsWith(normalized))) return 'pending';
+    return 'invalid';
+  };
   const getUnitPrice = (item) => Number(item?.unitPrice) || getPriceByName(item?.name);
   const getCartSubtotal = () => cart.reduce((acc, item) => acc + (getUnitPrice(item) * item.qty), 0);
   const getCartDiscount = (subtotal = getCartSubtotal()) => (
@@ -175,24 +182,24 @@
     ui.checkout.addEventListener('click', checkout);
     ui.clear.addEventListener('click', clearCart);
 
-    const applyDiscountCode = () => {
+    const applyDiscountCode = ({ animate = false } = {}) => {
       discountCode = normalizeDiscountCode(ui.codeInput?.value || '');
       saveCode();
-      const status = !discountCode ? 'idle' : (isValidDiscountCode(discountCode) ? 'valid' : 'invalid');
-      render({ codeStatus: status, animateCodeStatus: Boolean(discountCode) });
+      render({ codeStatus: getDiscountCodeStatus(discountCode), animateCodeStatus: animate });
     };
 
-    ui.codeApply.addEventListener('click', applyDiscountCode);
+    ui.codeApply.addEventListener('click', () => applyDiscountCode({ animate: Boolean(ui.codeInput?.value) }));
+    ui.codeInput.addEventListener('input', () => applyDiscountCode());
     ui.codeInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        applyDiscountCode();
+        applyDiscountCode({ animate: Boolean(ui.codeInput?.value) });
       }
     });
   };
 
   const animateCodeButton = (state) => {
-    if (!ui.codeApply || state === 'idle') return;
+    if (!ui.codeApply || (state !== 'valid' && state !== 'invalid')) return;
     if (codeAnimationTimeout) clearTimeout(codeAnimationTimeout);
     ui.codeApply.classList.remove('is-verified', 'is-invalid');
     // Force reflow so animation can replay for repeated attempts.
@@ -264,7 +271,7 @@
     const subtotal = getCartSubtotal();
     const discountAmount = getCartDiscount(subtotal);
     const total = getCartTotal(subtotal);
-    const resolvedCodeStatus = codeStatus || (!discountCode ? 'idle' : (isValidDiscountCode(discountCode) ? 'valid' : 'invalid'));
+    const resolvedCodeStatus = codeStatus || getDiscountCodeStatus(discountCode);
     const countEl = ui.toggle.querySelector('.cart-count');
     if (countEl) countEl.textContent = count;
     if (ui.clear) ui.clear.disabled = !cart.length;
@@ -276,7 +283,7 @@
       animateSummaryTotal(0, { instant: instantTotal });
       if (ui.summaryCode) {
         ui.summaryCode.textContent = discountCode
-          ? (isValidDiscountCode(discountCode) ? discountCode : `${discountCode} (invalido)`)
+          ? (resolvedCodeStatus === 'invalid' ? `${discountCode} (invalido)` : discountCode)
           : '—';
       }
       updateCodeStatus(resolvedCodeStatus, { animate: animateCodeStatus });
@@ -310,7 +317,7 @@
     animateSummaryTotal(total, { instant: instantTotal });
     if (ui.summaryCode) {
       ui.summaryCode.textContent = discountCode
-        ? (isValidDiscountCode(discountCode) ? discountCode : `${discountCode} (invalido)`)
+        ? (resolvedCodeStatus === 'invalid' ? `${discountCode} (invalido)` : discountCode)
         : '—';
     }
     updateCodeStatus(resolvedCodeStatus, { animate: animateCodeStatus });
