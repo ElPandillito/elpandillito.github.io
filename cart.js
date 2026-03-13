@@ -123,6 +123,7 @@
         </div>
 
         <div class="cart-footer">
+          <button class="btn btn-ghost cart-clear" type="button">Limpiar carrito</button>
           <button class="btn btn-primary cart-checkout">Comprar por WhatsApp</button>
         </div>
       </div>`;
@@ -154,6 +155,7 @@
       drawer: root.querySelector('.cart-drawer'),
       items: root.querySelector('.cart-items'),
       checkout: root.querySelector('.cart-checkout'),
+      clear: root.querySelector('.cart-clear'),
       close: root.querySelector('.cart-close'),
       codeInput: root.querySelector('#cart-code-input'),
       codeApply: root.querySelector('.cart-apply'),
@@ -171,6 +173,7 @@
     });
     ui.close.addEventListener('click', () => root.classList.remove('is-open'));
     ui.checkout.addEventListener('click', checkout);
+    ui.clear.addEventListener('click', clearCart);
 
     const applyDiscountCode = () => {
       discountCode = normalizeDiscountCode(ui.codeInput?.value || '');
@@ -264,6 +267,7 @@
     const resolvedCodeStatus = codeStatus || (!discountCode ? 'idle' : (isValidDiscountCode(discountCode) ? 'valid' : 'invalid'));
     const countEl = ui.toggle.querySelector('.cart-count');
     if (countEl) countEl.textContent = count;
+    if (ui.clear) ui.clear.disabled = !cart.length;
     if (!cart.length) {
       ui.items.innerHTML = `<p class="cart-empty">Tu carrito está vacío.</p>`;
       if (ui.summaryItems) ui.summaryItems.textContent = '0';
@@ -336,6 +340,13 @@
     save();
     render();
     openDrawer();
+  };
+
+  const clearCart = () => {
+    if (!cart.length) return;
+    cart = [];
+    save();
+    render();
   };
 
   const openDrawer = () => ui.root?.classList.add('is-open');

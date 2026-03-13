@@ -33,13 +33,16 @@
           <div class="size-picker" data-selected="M">
             <div class="size-picker__label">Talla seleccionada: <span class="size-picker__value">M</span></div>
             <div class="size-picker__options">
-              <button class="size-btn" data-size="CH">CH</button>
+              <button class="size-btn is-unavailable" data-size="CH" disabled aria-disabled="true">CH · Agotada</button>
               <button class="size-btn" data-size="M">M</button>
               <button class="size-btn" data-size="G">G</button>
               <button class="size-btn" data-size="XL">XL</button>
             </div>
           </div>
           <a class="size-guide-btn" href="#guia-tallas">Guía de tallas</a>
+        </div>
+        <div class="stock-alert" aria-live="polite">
+          No hay stock disponible en talla CH para la colección INICIO.
         </div>
         <div class="cart-actions">
           <button class="btn btn-primary add-to-cart" data-product="INICIO" data-price="599" data-image="images/hombre/inicio-01.jpg">Añadir al carrito</button>

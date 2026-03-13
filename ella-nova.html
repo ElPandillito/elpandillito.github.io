@@ -50,6 +50,9 @@
           </div>
           <a class="size-guide-btn" href="#guia-tallas">Guía de tallas</a>
         </div>
+        <div class="stock-alert" id="aura-stock-alert" hidden aria-live="polite">
+          No hay stock disponible en talla S para el color blanco.
+        </div>
         <div class="cart-actions">
           <button class="btn btn-primary add-to-cart" data-product="SHORT AURA BLANCO" data-image="images/ella/aura-blanco-01.jpg">Añadir al carrito</button>
         </div>
@@ -181,7 +184,12 @@
       const colorButtons = Array.from(document.querySelectorAll('.aura-color'));
       const colorValue = document.getElementById('aura-color-value');
       const galleryCopy = document.getElementById('aura-gallery-copy');
+      const sizePicker = document.querySelector('.size-picker');
+      const sizeButtons = Array.from(document.querySelectorAll('.size-btn[data-size]'));
+      const sizeValue = sizePicker?.querySelector('.size-picker__value');
+      const stockAlert = document.getElementById('aura-stock-alert');
       const addToCart = document.querySelector('.add-to-cart[data-product]');
+      const buyNow = document.querySelector('.page-actions .btn.btn-primary[target="_blank"]');
 
       if (!thumbsWrap || !colorButtons.length) return;
 
@@ -194,12 +202,64 @@
       // Puedes subir 4, 8, 12, etc. (se detectan automáticamente en orden).
       const imageCacheByColor = {};
       let colorRequestId = 0;
+      let currentColor = 'blanco';
 
       const colorMeta = {
         blanco: { label: 'Blanco' },
         amarillo: { label: 'Amarillo' },
         gris: { label: 'Gris' },
         rosa: { label: 'Rosa' }
+      };
+
+      const unavailableByColor = {
+        blanco: new Set(['S'])
+      };
+
+      const setSelectedSize = (size) => {
+        if (!size || !sizeButtons.length) return;
+        if (sizeValue) sizeValue.textContent = size;
+        if (sizePicker) sizePicker.dataset.selected = size;
+        sizeButtons.forEach(button => {
+          button.classList.toggle('is-active', button.dataset.size === size);
+        });
+      };
+
+      const getSelectedSize = () => sizeValue?.textContent.trim() || sizePicker?.dataset.selected || '';
+
+      const isUnavailableCombination = (color, size) => {
+        const unavailableSizes = unavailableByColor[color];
+        return Boolean(unavailableSizes && unavailableSizes.has(size));
+      };
+
+      const syncStockState = (color) => {
+        const unavailableSizes = unavailableByColor[color] || new Set();
+
+        sizeButtons.forEach(button => {
+          const baseLabel = button.dataset.label || button.textContent.trim();
+          button.dataset.label = baseLabel;
+          const isUnavailable = unavailableSizes.has(button.dataset.size || '');
+          button.disabled = isUnavailable;
+          button.classList.toggle('is-unavailable', isUnavailable);
+          button.setAttribute('aria-disabled', String(isUnavailable));
+          button.textContent = isUnavailable ? `${baseLabel} · Agotada` : baseLabel;
+        });
+
+        if (isUnavailableCombination(color, getSelectedSize())) {
+          const fallbackButton = sizeButtons.find(button => !button.disabled);
+          if (fallbackButton) setSelectedSize(fallbackButton.dataset.size || '');
+        }
+
+        if (stockAlert) stockAlert.hidden = color !== 'blanco';
+
+        const disablePurchase = isUnavailableCombination(color, getSelectedSize());
+        if (addToCart) {
+          addToCart.disabled = disablePurchase;
+          addToCart.textContent = disablePurchase ? 'Talla agotada' : 'Añadir al carrito';
+        }
+        if (buyNow) {
+          buyNow.classList.toggle('is-disabled', disablePurchase);
+          buyNow.setAttribute('aria-disabled', String(disablePurchase));
+        }
       };
 
       const imageExists = (src) =>
@@ -250,6 +310,7 @@
 
       const setColor = async (colorKey) => {
         const requestId = ++colorRequestId;
+        currentColor = colorKey;
 
         const meta = colorMeta[colorKey] || { label: 'Color' };
         if (colorValue) colorValue.textContent = meta.label;
@@ -259,6 +320,7 @@
         if (addToCart) {
           addToCart.dataset.product = `SHORT AURA ${meta.label.toUpperCase()}`;
         }
+        syncStockState(colorKey);
 
         colorButtons.forEach(button => {
           button.classList.toggle('is-active', button.dataset.color === colorKey);
@@ -309,6 +371,19 @@
 
       colorButtons.forEach(button => {
         button.addEventListener('click', () => setColor(button.dataset.color || 'blanco'));
+      });
+
+      sizeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          setSelectedSize(button.dataset.size || '');
+          syncStockState(currentColor);
+        });
+      });
+
+      buyNow?.addEventListener('click', (event) => {
+        if (buyNow.getAttribute('aria-disabled') !== 'true') return;
+        event.preventDefault();
+        window.alert('La talla S en color blanco ya no tiene stock disponible.');
       });
 
       const initialColor = colorButtons.find(button => button.classList.contains('is-active'))?.dataset.color || 'blanco';
