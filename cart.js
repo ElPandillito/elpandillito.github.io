@@ -434,6 +434,66 @@
     });
   };
 
+  // Función para manejar stock en páginas sin selector de color (Ej: Inicio, Ascenso)
+  const initStaticStock = () => {
+    const titleEl = document.querySelector('h1');
+    if (!titleEl) return;
+    
+    const title = titleEl.textContent.trim().toUpperCase();
+    const sizeBtns = document.querySelectorAll('.size-picker .size-btn');
+    const addToCartBtn = document.querySelector('.add-to-cart');
+
+    // Reglas para Colección ASCENSO (Todo agotado)
+    if (title.includes('ASCENSO')) {
+      sizeBtns.forEach(btn => {
+        btn.classList.add('is-unavailable');
+        btn.disabled = true;
+      });
+      if (addToCartBtn) {
+        addToCartBtn.textContent = 'Agotado';
+        addToCartBtn.dataset.locked = 'true';
+        addToCartBtn.style.opacity = '0.6';
+        addToCartBtn.style.cursor = 'not-allowed';
+      }
+    }
+
+    // Reglas para Colección INICIO (Solo hay L/G)
+    if (title.includes('INICIO')) {
+      const availableSizes = ['L', 'G']; // G es Grande/Large
+      
+      const checkInicioLock = () => {
+        const activeBtn = document.querySelector('.size-picker .size-btn.is-active');
+        const currentSize = activeBtn ? activeBtn.dataset.size : '';
+        const isAvailable = availableSizes.includes(currentSize);
+
+        if (addToCartBtn) {
+          addToCartBtn.dataset.locked = isAvailable ? 'false' : 'true';
+          if (!isAvailable) {
+            addToCartBtn.textContent = 'Agotado (Solo Talla G)';
+            addToCartBtn.style.opacity = '0.6';
+            addToCartBtn.style.cursor = 'not-allowed';
+          } else {
+            addToCartBtn.textContent = 'Añadir al carrito';
+            addToCartBtn.style.opacity = '';
+            addToCartBtn.style.cursor = '';
+          }
+        }
+      };
+
+      sizeBtns.forEach(btn => {
+        const isAvail = availableSizes.includes(btn.dataset.size);
+        if (!isAvail) {
+          btn.classList.add('is-unavailable');
+          btn.disabled = true;
+        }
+        btn.addEventListener('click', checkInicioLock);
+      });
+      
+      // Chequeo inicial
+      checkInicioLock();
+    }
+  };
+
   const initColorSelection = () => {
     const container = document.querySelector('.aura-colors');
     if (!container) return;
@@ -450,7 +510,8 @@
       // Reglas de stock: Amarillo todo out, Blanco solo S/CH out
       const stockRules = {
         'amarillo': ['S', 'M', 'CH'],
-        'blanco': ['S', 'CH'] 
+        'blanco': ['S', 'CH'],
+        'negro': ['S', 'CH']
       };
       
       const outSizes = stockRules[color] || [];
@@ -473,7 +534,8 @@
     const updateStock = (color) => {
       const stockRules = {
         'amarillo': ['S', 'M', 'CH'],
-        'blanco': ['S', 'CH']
+        'blanco': ['S', 'CH'],
+        'negro': ['S', 'CH']
       };
       const outSizes = stockRules[color] || [];
 
@@ -492,6 +554,7 @@
       let msg = '';
       if (color === 'amarillo') msg = 'La talla S y M están agotadas';
       if (color === 'blanco') msg = 'La talla S está agotada';
+      if (color === 'negro') msg = 'La talla S está agotada';
 
       if (msg) {
         if (!alertBox && sizeRow) {
@@ -536,6 +599,7 @@
     load();
     render({ instantTotal: true });
     initSizePickers();
+    initStaticStock();
     initColorSelection();
     attachButtons();
   });
