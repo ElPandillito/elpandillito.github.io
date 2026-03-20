@@ -405,6 +405,19 @@
   const attachButtons = () => {
     document.querySelectorAll('.add-to-cart').forEach(btn => {
       btn.addEventListener('click', () => {
+        // Si el botón está bloqueado, reproducimos animación y salimos
+        if (btn.dataset.locked === 'true') {
+          btn.animate([
+            { transform: 'translateX(0)' },
+            { transform: 'translateX(-5px)' },
+            { transform: 'translateX(5px)' },
+            { transform: 'translateX(-5px)' },
+            { transform: 'translateX(5px)' },
+            { transform: 'translateX(0)' }
+          ], { duration: 400, easing: 'ease-in-out' });
+          return;
+        }
+
         const sizeEl = btn.closest('body').querySelector('.size-picker__value');
         const size = sizeEl ? sizeEl.textContent.trim() : '';
         const productName = btn.dataset.product || 'Producto';
@@ -421,11 +434,109 @@
     });
   };
 
+  const initColorSelection = () => {
+    const container = document.querySelector('.aura-colors');
+    if (!container) return;
+
+    const colors = container.querySelectorAll('.aura-color');
+    const sizeBtns = document.querySelectorAll('.size-picker .size-btn');
+    const addToCartBtn = document.querySelector('.add-to-cart');
+
+    const checkLock = (color) => {
+      // Obtenemos la talla activa (o la primera si no hay activa)
+      const activeSizeBtn = document.querySelector('.size-picker .size-btn.is-active');
+      const currentSize = activeSizeBtn ? activeSizeBtn.dataset.size : '';
+
+      // Reglas de stock: Amarillo todo out, Blanco solo S/CH out
+      const stockRules = {
+        'amarillo': ['S', 'M', 'CH'],
+        'blanco': ['S', 'CH'] 
+      };
+      
+      const outSizes = stockRules[color] || [];
+      const isSelectionOut = outSizes.includes(currentSize);
+
+      if (addToCartBtn) {
+        addToCartBtn.dataset.locked = isSelectionOut ? 'true' : 'false';
+        if (isSelectionOut) {
+          addToCartBtn.textContent = 'Agotado';
+          addToCartBtn.style.opacity = '0.6';
+          addToCartBtn.style.cursor = 'not-allowed';
+        } else {
+          addToCartBtn.textContent = 'Añadir al carrito';
+          addToCartBtn.style.opacity = '';
+          addToCartBtn.style.cursor = '';
+        }
+      }
+    };
+
+    const updateStock = (color) => {
+      const stockRules = {
+        'amarillo': ['S', 'M', 'CH'],
+        'blanco': ['S', 'CH']
+      };
+      const outSizes = stockRules[color] || [];
+
+      sizeBtns.forEach(btn => {
+        const isOut = outSizes.includes(btn.dataset.size);
+        btn.classList.toggle('is-unavailable', isOut);
+        btn.disabled = isOut;
+      });
+
+      checkLock(color);
+
+      // Mensaje de stock agotado
+      const sizeRow = document.querySelector('.size-row');
+      let alertBox = document.querySelector('.stock-alert');
+      
+      let msg = '';
+      if (color === 'amarillo') msg = 'La talla S y M están agotadas';
+      if (color === 'blanco') msg = 'La talla S está agotada';
+
+      if (msg) {
+        if (!alertBox && sizeRow) {
+          alertBox = document.createElement('div');
+          alertBox.className = 'stock-alert';
+          sizeRow.parentNode.insertBefore(alertBox, sizeRow.nextSibling);
+        }
+        if (alertBox) alertBox.textContent = msg;
+      } else if (alertBox) {
+        alertBox.remove();
+      }
+    };
+
+    colors.forEach(btn => {
+      btn.addEventListener('click', () => {
+        colors.forEach(c => c.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        const color = [...btn.classList].find(c => c.startsWith('aura-color--'))?.replace('aura-color--', '');
+        if (color) updateStock(color);
+      });
+    });
+
+    // Escuchar cambios de talla para actualizar el bloqueo del botón
+    sizeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const activeColorBtn = container.querySelector('.aura-color.is-active');
+        const color = activeColorBtn ? [...activeColorBtn.classList].find(c => c.startsWith('aura-color--'))?.replace('aura-color--', '') : '';
+        if (color) checkLock(color);
+      });
+    });
+
+    // Estado inicial por si carga con un color seleccionado
+    const active = container.querySelector('.is-active');
+    if (active) {
+      const color = [...active.classList].find(c => c.startsWith('aura-color--'))?.replace('aura-color--', '');
+      if (color) updateStock(color);
+    }
+  };
+
   document.addEventListener('DOMContentLoaded', () => {
     createUI();
     load();
     render({ instantTotal: true });
     initSizePickers();
+    initColorSelection();
     attachButtons();
   });
 
