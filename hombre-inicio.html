@@ -4,6 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Inicio | Hombre | JOSSA ATHLETICS</title>
+  <meta name="description" content="INICIO de JOSSA ATHLETICS: oversized tee premium para hombre con lectura limpia y fit amplio." />
+  <link rel="canonical" href="https://jossaathletics.com/hombre-inicio.html" />
   <link rel="stylesheet" href="outfit.css" />
 </head>
 
@@ -20,10 +22,31 @@
   </header>
 
   <section class="page-hero">
-    <div class="wrap">
-      <div>
+    <div class="wrap product-layout">
+      <div class="product-gallery-panel" id="galeria">
+        <div class="gallery-head gallery-head--product">
+          <span class="section-kicker">Galeria</span>
+          <h2>Vista principal</h2>
+          <p id="product-gallery-copy">Inicio presenta un fit oversize limpio con un lenguaje visual sobrio y premium.</p>
+        </div>
+
+        <div class="nova-gallery" id="product-gallery">
+          <div class="nova-main photo">
+            <img id="product-main-image" src="images/hombre/inicio-01.jpg" alt="Inicio 01">
+          </div>
+          <div class="nova-thumbs" id="product-thumbs" role="tablist" aria-label="Miniaturas de Inicio"></div>
+        </div>
+      </div>
+
+      <div class="product-summary">
+        <span class="product-eyebrow">Para El / Oversized tee</span>
         <h1>INICIO</h1>
-        <p>Drop base de la linea hombre. Fit oversize, logo frontal limpio.</p>
+        <p class="product-intro">La base del universo hombre: silueta amplia, lectura limpia y una presencia urbana con intención premium.</p>
+        <div class="product-detail-list" aria-label="Detalles del producto">
+          <div><strong>Uso</strong><span>Streetwear y daily rotation</span></div>
+          <div><strong>Fit</strong><span>Oversize estructurado</span></div>
+          <div><strong>Oferta</strong><span>Drop destacado con descuento</span></div>
+        </div>
         <p class="price-tag price-tag--sale">
           <span class="price-old">$699</span>
           <span class="price-now">$599</span>
@@ -47,42 +70,15 @@
         <div class="cart-actions">
           <button class="btn btn-primary add-to-cart" data-product="INICIO" data-price="599" data-image="images/hombre/inicio-01.jpg">Añadir al carrito</button>
         </div>
-        <div class="page-actions" style="margin-top:14px;">
-          <a class="btn btn-primary" href="#galeria">Ver galería</a>
+        <div class="page-actions page-actions--offset product-summary__actions">
+          <a class="btn btn-primary"
+             target="_blank" rel="noopener"
+             href="https://wa.me/523332510644?text=Hola%20JOSSA%20ATHLETICS%20%F0%9F%91%8B%0AQuiero%20comprar%20el%20outfit%20INICIO.%0A%0ADatos:%0A1)%20Nombre%20completo:%0A2)%20Talla:%0A3)%20Ciudad:%0A4)%20Dirección%20de%20envío:%0A5)%20Método%20de%20pago:">
+            Compra rápida
+          </a>
+          <a class="btn btn-ghost" href="#guia-tallas">Guía de tallas</a>
           <a class="btn btn-ghost" href="hombre.html">Volver a Hombre</a>
         </div>
-      </div>
-
-      <div class="page-actions">
-        <a class="btn btn-primary"
-           target="_blank" rel="noopener"
-           href="https://wa.me/523332510644?text=Hola%20JOSSA%20ATHLETICS%20%F0%9F%91%8B%0AQuiero%20comprar%20el%20outfit%20INICIO.%0A%0ADatos:%0A1)%20Nombre%20completo:%0A2)%20Talla:%0A3)%20Ciudad:%0A4)%20Dirección%20de%20envío:%0A5)%20Método%20de%20pago:">
-          Comprar por WhatsApp
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <section class="gallery" id="galeria">
-    <div class="wrap">
-      <div class="gallery-head">
-        <h2>GALERIA</h2>
-        <p>Fotos del outfit Inicio.</p>
-      </div>
-
-      <div class="gallery-grid">
-        <div class="photo">
-          <a href="images/hombre/inicio-01.jpg" target="_blank" rel="noopener">
-            <img src="images/hombre/inicio-01.jpg" alt="Inicio 01" />
-          </a>
-        </div>
-        <div class="photo">
-          <a href="images/hombre/inicio-02.jpg" target="_blank" rel="noopener">
-            <img src="images/hombre/inicio-02.jpg" alt="Inicio 02" />
-          </a>
-        </div>
-        <div class="photo"><img src="images/hombre/inicio-03.jpg" alt="Inicio 03" /></div>
-        <div class="photo"><img src="images/hombre/inicio-04.jpg" alt="Inicio 04" /></div>
       </div>
     </div>
   </section>
@@ -148,6 +144,20 @@
     </div>
   </footer>
 
+  <script>
+    window.productGalleryConfig = {
+      productName: 'INICIO',
+      defaultImage: 'images/hombre/inicio-01.jpg',
+      defaultCopy: 'Inicio presenta un fit oversize limpio con un lenguaje visual sobrio y premium.',
+      images: [
+        'images/hombre/inicio-01.jpg',
+        'images/hombre/inicio-02.jpg',
+        'images/hombre/inicio-03.jpg',
+        'images/hombre/inicio-04.jpg'
+      ]
+    };
+  </script>
+  <script src="product-gallery.js"></script>
   <script src="cart.js"></script>
 </body>
 </html>

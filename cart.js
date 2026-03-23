@@ -292,7 +292,7 @@
     ui.items.innerHTML = cart.map((item, idx) => `
       <div class="cart-item">
         <a class="cart-thumb" href="${item.image || '#'}" target="_blank" rel="noopener">
-          <img src="${item.image || 'images/placeholder.png'}" alt="${item.name}">
+          <img src="${item.image || 'favicon.png'}" alt="${item.name}">
         </a>
         <div class="cart-meta">
           <div class="cart-name">${item.name}</div>
@@ -397,8 +397,8 @@
       'Nombre:',
       'Ciudad:',
       'Dirección:'
-    ].join('%0A');
-    const url = `https://wa.me/523332510644?text=${msg}`;
+    ].filter(Boolean).join('\n');
+    const url = `https://wa.me/523332510644?text=${encodeURIComponent(msg)}`;
     window.open(url, '_blank');
   };
 
@@ -457,9 +457,9 @@
       }
     }
 
-    // Reglas para Colección INICIO (Solo hay L/G)
+    // Reglas para Colección INICIO (en esta versión solo CH está agotada)
     if (title.includes('INICIO')) {
-      const availableSizes = ['L', 'G']; // G es Grande/Large
+      const availableSizes = ['M', 'G', 'XL'];
       
       const checkInicioLock = () => {
         const activeBtn = document.querySelector('.size-picker .size-btn.is-active');
@@ -469,7 +469,7 @@
         if (addToCartBtn) {
           addToCartBtn.dataset.locked = isAvailable ? 'false' : 'true';
           if (!isAvailable) {
-            addToCartBtn.textContent = 'Agotado (Solo Talla G)';
+            addToCartBtn.textContent = 'Agotado';
             addToCartBtn.style.opacity = '0.6';
             addToCartBtn.style.cursor = 'not-allowed';
           } else {
@@ -497,6 +497,12 @@
   const initColorSelection = () => {
     const container = document.querySelector('.aura-colors');
     if (!container) return;
+    if (
+      document.getElementById('nova-gallery') ||
+      document.getElementById('product-gallery') ||
+      document.getElementById('dark-legacy-color-value') ||
+      document.getElementById('dark-legacy-mujer-color-value')
+    ) return;
 
     const colors = container.querySelectorAll('.aura-color');
     const sizeBtns = document.querySelectorAll('.size-picker .size-btn');

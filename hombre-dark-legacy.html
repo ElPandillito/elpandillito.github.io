@@ -4,6 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dark Legacy | JOSSA ATHLETICS</title>
+  <meta name="description" content="Dark Legacy de JOSSA ATHLETICS: acid wash premium para hombre con presencia streetwear y energia de statement." />
+  <link rel="canonical" href="https://jossaathletics.com/hombre-dark-legacy.html" />
   <link rel="stylesheet" href="outfit.css" />
 </head>
 
@@ -21,13 +23,34 @@
   </header>
 
   <section class="page-hero">
-    <div class="wrap">
-      <div>
+    <div class="wrap product-layout">
+      <div class="product-gallery-panel" id="galeria">
+        <div class="gallery-head gallery-head--product">
+          <span class="section-kicker">Galeria</span>
+          <h2>Vista principal</h2>
+          <p id="product-gallery-copy">Dark Legacy en gris. Acid wash con presencia frontal y una energía más pesada, premium y callejera.</p>
+        </div>
+
+        <div class="nova-gallery" id="product-gallery">
+          <div class="nova-main photo">
+            <img id="product-main-image" src="images/hombre/dark-legacy-gris-01.jpg" alt="Dark Legacy Gris 01" />
+          </div>
+          <div class="nova-thumbs" id="product-thumbs" role="tablist" aria-label="Miniaturas de Dark Legacy"></div>
+        </div>
+      </div>
+
+      <div class="product-summary">
+        <span class="product-eyebrow">Para El / Acid wash tee</span>
         <h1>DARK LEGACY</h1>
-        <p>Acid wash. Presencia frontal. Identidad que pesa.</p>
+        <p class="product-intro">Una tee con presencia frontal, textura visual marcada y una lectura más seria entre performance y streetwear.</p>
+        <div class="product-detail-list" aria-label="Detalles del producto">
+          <div><strong>Uso</strong><span>Streetwear y entrenamiento</span></div>
+          <div><strong>Fit</strong><span>Oversize con peso visual</span></div>
+          <div><strong>Drop</strong><span>Acid wash premium</span></div>
+        </div>
         <p class="price-tag">Precio: $499</p>
         <div class="color-row">
-          <div class="color-selected">Color seleccionado: <strong id="dark-legacy-color-value">Gris</strong></div>
+          <div class="color-selected">Color seleccionado: <strong id="product-color-value">Gris</strong></div>
           <div class="aura-colors" role="tablist" aria-label="Colores de DARK LEGACY">
             <button class="aura-color aura-color--gris is-active" type="button" data-color="gris">Gris</button>
             <button class="aura-color aura-color--rosa" type="button" data-color="rosa">Rosa</button>
@@ -49,43 +72,15 @@
         <div class="cart-actions">
           <button class="btn btn-primary add-to-cart" data-base-product="DARK LEGACY" data-product="DARK LEGACY GRIS" data-image="images/hombre/dark-legacy-gris-01.jpg">Añadir al carrito</button>
         </div>
-      </div>
-
-      <div class="page-actions">
-        <!-- Botón de compra directo a WhatsApp -->
-        <a class="btn btn-primary"
-           id="dark-legacy-buy-now"
-           target="_blank" rel="noopener"
-           href="https://wa.me/523332510644?text=Hola%20JOSSA%20ATHLETICS%20%F0%9F%91%8B%0AQuiero%20comprar%20el%20outfit%20DARK%20LEGACY.%0A%0ADatos:%0A1)%20Talla:%0A2)%20Ciudad:%0A3)%20Direcci%C3%B3n%20de%20env%C3%ADo:%0A4)%20M%C3%A9todo%20de%20pago:">
-          Comprar
-        </a>
-        <a class="btn btn-ghost" href="hombre.html">Volver</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="gallery">
-    <div class="wrap">
-      <div class="gallery-head">
-        <h2>GALERÍA</h2>
-        <p>Detalles y ángulos del outfit.</p>
-      </div>
-
-      <div class="gallery-grid">
-        <div class="photo">
-          <a href="images/hombre/dark-legacy-gris-01.jpg" target="_blank" rel="noopener">
-            <img src="images/hombre/dark-legacy-gris-01.jpg" alt="Dark Legacy 01" />
+        <div class="page-actions page-actions--offset product-summary__actions">
+          <a class="btn btn-primary"
+             id="dark-legacy-buy-now"
+             target="_blank" rel="noopener"
+             href="https://wa.me/523332510644?text=Hola%20JOSSA%20ATHLETICS%20%F0%9F%91%8B%0AQuiero%20comprar%20el%20outfit%20DARK%20LEGACY%20(GRIS).%0A%0ADatos:%0A1)%20Talla:%0A2)%20Ciudad:%0A3)%20Direcci%C3%B3n%20de%20env%C3%ADo:%0A4)%20M%C3%A9todo%20de%20pago:">
+            Compra rápida
           </a>
-        </div>
-        <div class="photo">
-          <a href="images/hombre/IMG_1273.jpg" target="_blank" rel="noopener">
-            <img src="images/hombre/IMG_1273.jpg" alt="Dark Legacy 02" />
-          </a>
-        </div>
-        <div class="photo">
-          <a href="images/hombre/IMG_1261.jpg" target="_blank" rel="noopener">
-            <img src="images/hombre/IMG_1261.jpg" alt="Dark Legacy 03" />
-          </a>
+          <a class="btn btn-ghost" href="#guia-tallas">Guía de tallas</a>
+          <a class="btn btn-ghost" href="hombre.html">Volver</a>
         </div>
       </div>
     </div>
@@ -152,145 +147,53 @@
   </footer>
 
   <script>
-    (() => {
-      const colorButtons = Array.from(document.querySelectorAll('.aura-color[data-color]'));
-      const colorValue = document.getElementById('dark-legacy-color-value');
-      const addToCart = document.querySelector('.add-to-cart[data-base-product]');
-      const buyNow = document.getElementById('dark-legacy-buy-now');
-      const galleryGrid = document.querySelector('.gallery-grid');
-      if (!colorButtons.length) return;
-
-      let colorRequestId = 0;
-
-      const colorMeta = {
+    window.productGalleryConfig = {
+      productName: 'DARK LEGACY',
+      defaultImage: 'images/hombre/dark-legacy-gris-01.jpg',
+      defaultVariant: 'gris',
+      defaultCopy: 'Dark Legacy en gris. Acid wash con presencia frontal y una energía más pesada, premium y callejera.',
+      colorValueId: 'product-color-value',
+      addToCartSelector: '.add-to-cart[data-base-product]',
+      buyNowSelector: '#dark-legacy-buy-now',
+      buildBuyNowHref(meta) {
+        const msg = [
+          'Hola JOSSA ATHLETICS 👋',
+          `Quiero comprar el outfit DARK LEGACY (${(meta.label || 'GRIS').toUpperCase()}).`,
+          '',
+          'Datos:',
+          '1) Talla:',
+          '2) Ciudad:',
+          '3) Dirección de envío:',
+          '4) Método de pago:'
+        ].join('\n');
+        return `https://wa.me/523332510644?text=${encodeURIComponent(msg)}`;
+      },
+      colors: {
         gris: {
           label: 'Gris',
+          product: 'DARK LEGACY GRIS',
+          copy: 'Dark Legacy en gris. Acid wash con presencia frontal y una energía más pesada, premium y callejera.',
           prefixes: ['images/hombre/dark-legacy-gris-'],
           fallback: ['images/hombre/IMG_1272.jpg', 'images/hombre/IMG_1273.jpg']
         },
         rosa: {
           label: 'Rosa',
+          product: 'DARK LEGACY ROSA',
+          copy: 'Dark Legacy en rosa. Misma actitud pesada con una lectura más inesperada y editorial.',
           prefixes: ['images/hombre/dark-legacy-rosa-'],
           fallback: ['images/hombre/IMG_1273.jpg', 'images/hombre/IMG_1272.jpg']
         },
         blanco: {
           label: 'Blanco',
+          product: 'DARK LEGACY BLANCO',
+          copy: 'Dark Legacy en blanco. Contraste limpio para una versión más nítida del drop.',
           prefixes: ['images/hombre/dark-legacy-blanco-'],
           fallback: ['images/hombre/IMG_1261.jpg']
         }
-      };
-
-      const imageExists = (src) =>
-        new Promise((resolve) => {
-          const probe = new Image();
-          probe.onload = () => resolve(true);
-          probe.onerror = () => resolve(false);
-          probe.src = src;
-        });
-
-      const findImageByBase = async (basePath) => {
-        const extensions = ['jpg', 'jpeg', 'png', 'webp'];
-        for (const ext of extensions) {
-          const candidate = `${basePath}.${ext}`;
-          // eslint-disable-next-line no-await-in-loop
-          if (await imageExists(candidate)) return candidate;
-        }
-        return '';
-      };
-
-      const resolveImagesFromPrefix = async (prefix) => {
-        const images = [];
-        let misses = 0;
-        for (let index = 1; index <= 40; index += 1) {
-          const base = `${prefix}${String(index).padStart(2, '0')}`;
-          // eslint-disable-next-line no-await-in-loop
-          const found = await findImageByBase(base);
-          if (found) {
-            images.push(found);
-            misses = 0;
-          } else {
-            misses += 1;
-            if (misses >= 3 && images.length) break;
-          }
-        }
-        return images;
-      };
-
-      const resolveColorImages = async (key) => {
-        const meta = colorMeta[key] || colorMeta.gris;
-        const found = [];
-
-        for (const prefix of meta.prefixes || []) {
-          // eslint-disable-next-line no-await-in-loop
-          const resolved = await resolveImagesFromPrefix(prefix);
-          found.push(...resolved);
-        }
-
-        const unique = Array.from(new Set(found));
-        if (unique.length) return unique;
-
-        const fallback = [];
-        for (const path of meta.fallback || []) {
-          // eslint-disable-next-line no-await-in-loop
-          if (await imageExists(path)) fallback.push(path);
-        }
-        return fallback;
-      };
-
-      const renderGallery = (images, label) => {
-        if (!galleryGrid) return;
-        if (!images.length) {
-          galleryGrid.innerHTML = '<div class="aura-loading">Agrega fotos para este color en images/hombre.</div>';
-          return;
-        }
-        galleryGrid.innerHTML = images.map((path, idx) => `
-          <div class="photo">
-            <a href="${path}" target="_blank" rel="noopener">
-              <img src="${path}" alt="Dark Legacy ${label} ${String(idx + 1).padStart(2, '0')}" />
-            </a>
-          </div>
-        `).join('');
-      };
-
-      const setColor = async (key) => {
-        const currentRequestId = ++colorRequestId;
-        const meta = colorMeta[key] || colorMeta.gris;
-        if (colorValue) colorValue.textContent = meta.label;
-        colorButtons.forEach(button => button.classList.toggle('is-active', button.dataset.color === key));
-
-        const images = await resolveColorImages(key);
-        if (currentRequestId !== colorRequestId) return;
-
-        renderGallery(images, meta.label);
-        const primaryImage = images[0] || '';
-
-        if (addToCart) {
-          addToCart.dataset.product = `${addToCart.dataset.baseProduct} ${meta.label.toUpperCase()}`;
-          if (primaryImage) addToCart.dataset.image = primaryImage;
-        }
-        if (buyNow) {
-          const msg = [
-            'Hola JOSSA ATHLETICS 👋',
-            `Quiero comprar el outfit DARK LEGACY (${meta.label.toUpperCase()}).`,
-            '',
-            'Datos:',
-            '1) Talla:',
-            '2) Ciudad:',
-            '3) Dirección de envío:',
-            '4) Método de pago:'
-          ].join('\n');
-          buyNow.href = `https://wa.me/523332510644?text=${encodeURIComponent(msg)}`;
-        }
-      };
-
-      colorButtons.forEach(button => {
-        button.addEventListener('click', () => setColor(button.dataset.color || 'gris'));
-      });
-
-      const initialColor = colorButtons.find(button => button.classList.contains('is-active'))?.dataset.color || 'gris';
-      setColor(initialColor);
-    })();
+      }
+    };
   </script>
+  <script src="product-gallery.js"></script>
   <script src="cart.js"></script>
 
 </body>
