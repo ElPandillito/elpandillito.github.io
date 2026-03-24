@@ -6,8 +6,7 @@
     ['WANDAFIT', 'WandaFit'],
     ['KAREN10', 'Karen10'],
     ['KARENG', 'KarenG'],
-    ['XIMENAARELLANO', 'Xime Arellano'],
-    ['XIMEARELLANO', 'Xime Arellano']
+    ['XIMENACA', 'Ximena CA']
   ]);
   const VALID_DISCOUNT_CODES = new Set(DISCOUNT_CODE_LABELS.keys());
   const PRICE_BY_PRODUCT = {
@@ -52,6 +51,11 @@
   const formatMoney = (value = 0) => `$${Math.round(value).toLocaleString('es-MX')} MXN`;
   const formatDiscountMoney = (value = 0) => `-${formatMoney(value)}`;
   const normalizeDiscountCode = (code = '') => String(code).trim().toUpperCase().replace(/\s+/g, '');
+  const migrateDiscountCode = (code = '') => {
+    const normalized = normalizeDiscountCode(code);
+    if (normalized === 'XIMENAARELLANO' || normalized === 'XIMEARELLANO') return 'XIMENACA';
+    return normalized;
+  };
   const getDiscountCodeLabel = (code = '') => DISCOUNT_CODE_LABELS.get(normalizeDiscountCode(code)) || String(code).trim();
   const isValidDiscountCode = (code = '') => VALID_DISCOUNT_CODES.has(normalizeDiscountCode(code));
   const getDiscountCodeStatus = (code = '') => {
@@ -77,7 +81,7 @@
       const unitPrice = (isInicio && mappedPrice) ? mappedPrice : getUnitPrice(item);
       return { ...item, unitPrice };
     });
-    try { discountCode = normalizeDiscountCode(localStorage.getItem(CODE_KEY) || ''); }
+    try { discountCode = migrateDiscountCode(localStorage.getItem(CODE_KEY) || ''); }
     catch { discountCode = ''; }
     draftDiscountCode = discountCode;
   };
