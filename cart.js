@@ -2,7 +2,14 @@
   const CART_KEY = 'jossa_cart_v1';
   const CODE_KEY = 'jossa_cart_code';
   const DISCOUNT_RATE = 0.10;
-  const VALID_DISCOUNT_CODES = new Set(['WANDAFIT', 'KAREN10', 'KARENG']);
+  const DISCOUNT_CODE_LABELS = new Map([
+    ['WANDAFIT', 'WandaFit'],
+    ['KAREN10', 'Karen10'],
+    ['KARENG', 'KarenG'],
+    ['XIMENAARELLANO', 'Xime Arellano'],
+    ['XIMEARELLANO', 'Xime Arellano']
+  ]);
+  const VALID_DISCOUNT_CODES = new Set(DISCOUNT_CODE_LABELS.keys());
   const PRICE_BY_PRODUCT = {
     'INICIO': 599,
     'DARK LEGACY': 499,
@@ -17,6 +24,7 @@
   };
   let cart = [];
   let discountCode = '';
+  let draftDiscountCode = '';
   let ui = {};
   let animatedTotal = 0;
   let totalAnimationFrame = null;
@@ -44,6 +52,7 @@
   const formatMoney = (value = 0) => `$${Math.round(value).toLocaleString('es-MX')} MXN`;
   const formatDiscountMoney = (value = 0) => `-${formatMoney(value)}`;
   const normalizeDiscountCode = (code = '') => String(code).trim().toUpperCase().replace(/\s+/g, '');
+  const getDiscountCodeLabel = (code = '') => DISCOUNT_CODE_LABELS.get(normalizeDiscountCode(code)) || String(code).trim();
   const isValidDiscountCode = (code = '') => VALID_DISCOUNT_CODES.has(normalizeDiscountCode(code));
   const getDiscountCodeStatus = (code = '') => {
     const normalized = normalizeDiscountCode(code);
@@ -70,6 +79,7 @@
     });
     try { discountCode = normalizeDiscountCode(localStorage.getItem(CODE_KEY) || ''); }
     catch { discountCode = ''; }
+    draftDiscountCode = discountCode;
   };
   const save = () => localStorage.setItem(CART_KEY, JSON.stringify(cart));
   const saveCode = () => localStorage.setItem(CODE_KEY, discountCode);
@@ -99,9 +109,10 @@
         <div class="cart-code">
           <label for="cart-code-input">Código de descuento</label>
           <div class="cart-code-row">
-            <input id="cart-code-input" type="text" placeholder="Ingresa tu código" value="">
-            <button class="cart-apply">Aplicar</button>
+            <input id="cart-code-input" type="text" placeholder="Discount code or gift card" value="">
+            <button class="cart-apply">Apply</button>
           </div>
+          <div class="cart-applied-code" aria-live="polite"></div>
           <div class="cart-code-hint">Ingresa tu código de descuento.</div>
           <div class="cart-code-status" aria-live="polite"></div>
         </div>
@@ -166,6 +177,7 @@
       close: root.querySelector('.cart-close'),
       codeInput: root.querySelector('#cart-code-input'),
       codeApply: root.querySelector('.cart-apply'),
+      appliedCode: root.querySelector('.cart-applied-code'),
       codeStatus: root.querySelector('.cart-code-status'),
       summaryItems: root.querySelector('.summary-items'),
       summarySubtotal: root.querySelector('.summary-subtotal'),
@@ -182,20 +194,57 @@
     ui.checkout.addEventListener('click', checkout);
     ui.clear.addEventListener('click', clearCart);
 
+    const syncApplyButtonState = () => {
+      if (!ui.codeApply || !ui.codeInput) return;
+      const typedCode = normalizeDiscountCode(ui.codeInput.value || '');
+      const hasTypedCode = Boolean(typedCode);
+      const isPendingApply = typedCode !== discountCode;
+
+      ui.codeApply.classList.toggle('is-ready', hasTypedCode && isPendingApply);
+      ui.codeApply.disabled = !hasTypedCode;
+    };
+
+    const setDraftDiscountCode = (nextCode = '') => {
+      draftDiscountCode = normalizeDiscountCode(nextCode);
+      syncApplyButtonState();
+      if (!ui.codeStatus) return;
+      if (!draftDiscountCode) {
+        updateCodeStatus('idle');
+        return;
+      }
+      if (draftDiscountCode === discountCode) {
+        updateCodeStatus(getDiscountCodeStatus(discountCode));
+        return;
+      }
+      ui.codeStatus.classList.remove('is-valid', 'is-invalid');
+      ui.codeStatus.textContent = 'Presiona Aplicar para validar el codigo.';
+    };
+
     const applyDiscountCode = ({ animate = false } = {}) => {
-      discountCode = normalizeDiscountCode(ui.codeInput?.value || '');
+      discountCode = draftDiscountCode;
       saveCode();
       render({ codeStatus: getDiscountCodeStatus(discountCode), animateCodeStatus: animate });
     };
 
     ui.codeApply.addEventListener('click', () => applyDiscountCode({ animate: Boolean(ui.codeInput?.value) }));
-    ui.codeInput.addEventListener('input', () => applyDiscountCode());
+    ui.codeInput.addEventListener('input', () => setDraftDiscountCode(ui.codeInput?.value || ''));
     ui.codeInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
         applyDiscountCode({ animate: Boolean(ui.codeInput?.value) });
       }
     });
+    ui.appliedCode?.addEventListener('click', (e) => {
+      const clearBtn = e.target.closest('.cart-code-chip__remove');
+      if (!clearBtn) return;
+      discountCode = '';
+      draftDiscountCode = '';
+      saveCode();
+      render({ codeStatus: 'idle' });
+    });
+
+    if (ui.codeInput) ui.codeInput.value = getDiscountCodeLabel(draftDiscountCode);
+    syncApplyButtonState();
   };
 
   const animateCodeButton = (state) => {
@@ -283,8 +332,23 @@
       animateSummaryTotal(0, { instant: instantTotal });
       if (ui.summaryCode) {
         ui.summaryCode.textContent = discountCode
-          ? (resolvedCodeStatus === 'invalid' ? `${discountCode} (invalido)` : discountCode)
+          ? (resolvedCodeStatus === 'invalid' ? `${getDiscountCodeLabel(discountCode)} (invalido)` : getDiscountCodeLabel(discountCode))
           : '—';
+      }
+      if (ui.appliedCode) {
+        ui.appliedCode.innerHTML = resolvedCodeStatus === 'valid'
+          ? `
+            <div class="cart-code-chip is-visible">
+              <span class="cart-code-chip__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.59 13.41 11 23l-9-9V5a2 2 0 0 1 2-2h9l9 9a2 2 0 0 1 .59 1.41Z"></path>
+                  <circle cx="7.5" cy="7.5" r="1.25"></circle>
+                </svg>
+              </span>
+              <span class="cart-code-chip__label">${getDiscountCodeLabel(discountCode)}</span>
+              <button class="cart-code-chip__remove" type="button" aria-label="Quitar código">×</button>
+            </div>`
+          : '';
       }
       updateCodeStatus(resolvedCodeStatus, { animate: animateCodeStatus });
       return;
@@ -310,17 +374,39 @@
       });
     });
 
-    if (ui.codeInput) ui.codeInput.value = discountCode;
+    if (ui.codeInput) ui.codeInput.value = getDiscountCodeLabel(draftDiscountCode);
     if (ui.summaryItems) ui.summaryItems.textContent = `${count}`;
     if (ui.summarySubtotal) ui.summarySubtotal.textContent = formatMoney(subtotal);
     if (ui.summaryDiscount) ui.summaryDiscount.textContent = formatDiscountMoney(discountAmount);
     animateSummaryTotal(total, { instant: instantTotal });
     if (ui.summaryCode) {
       ui.summaryCode.textContent = discountCode
-        ? (resolvedCodeStatus === 'invalid' ? `${discountCode} (invalido)` : discountCode)
+        ? (resolvedCodeStatus === 'invalid' ? `${getDiscountCodeLabel(discountCode)} (invalido)` : getDiscountCodeLabel(discountCode))
         : '—';
     }
+    if (ui.appliedCode) {
+      ui.appliedCode.innerHTML = resolvedCodeStatus === 'valid'
+        ? `
+          <div class="cart-code-chip is-visible">
+            <span class="cart-code-chip__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.59 13.41 11 23l-9-9V5a2 2 0 0 1 2-2h9l9 9a2 2 0 0 1 .59 1.41Z"></path>
+                <circle cx="7.5" cy="7.5" r="1.25"></circle>
+              </svg>
+            </span>
+            <span class="cart-code-chip__label">${getDiscountCodeLabel(discountCode)}</span>
+            <button class="cart-code-chip__remove" type="button" aria-label="Quitar código">×</button>
+          </div>`
+        : '';
+    }
     updateCodeStatus(resolvedCodeStatus, { animate: animateCodeStatus });
+    if (ui.codeApply) {
+      const typedCode = normalizeDiscountCode(ui.codeInput?.value || draftDiscountCode);
+      const hasTypedCode = Boolean(typedCode);
+      const isPendingApply = typedCode !== discountCode;
+      ui.codeApply.classList.toggle('is-ready', hasTypedCode && isPendingApply);
+      ui.codeApply.disabled = !hasTypedCode;
+    }
   };
 
   const getPriceFromButton = (btn, productName) => {
@@ -391,7 +477,7 @@
       `Subtotal estimado: ${formatMoney(subtotal)}`,
       discountAmount ? `Descuento (10%): ${formatDiscountMoney(discountAmount)}` : '',
       `Total estimado: ${formatMoney(total)}`,
-      (discountCode && isValidDiscountCode(discountCode)) ? `Código: ${discountCode}` : '',
+      (discountCode && isValidDiscountCode(discountCode)) ? `Código: ${getDiscountCodeLabel(discountCode)}` : '',
       '',
       'Envío:',
       'Nombre:',
