@@ -603,10 +603,10 @@
       const activeSizeBtn = document.querySelector('.size-picker .size-btn.is-active');
       const currentSize = activeSizeBtn ? activeSizeBtn.dataset.size : '';
 
-      // Reglas de stock: Amarillo todo out, Blanco solo S/CH out
+      // Reglas de stock: Amarillo todo out, Blanco solo S out
       const stockRules = {
         'amarillo': ['S', 'M', 'CH'],
-        'blanco': ['S', 'CH'],
+        'blanco': ['S'],
         'negro': ['S', 'CH']
       };
       
@@ -630,7 +630,7 @@
     const updateStock = (color) => {
       const stockRules = {
         'amarillo': ['S', 'M', 'CH'],
-        'blanco': ['S', 'CH'],
+        'blanco': ['S'],
         'negro': ['S', 'CH']
       };
       const outSizes = stockRules[color] || [];
