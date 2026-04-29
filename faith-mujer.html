@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Faith Mujer | JOSSA ATHLETICS</title>
+  <meta name="description" content="Faith Mujer de JOSSA ATHLETICS: crop top con short a juego, compra directa y galeria activa para negro y blanco." />
+  <link rel="canonical" href="https://jossaathletics.com/faith-mujer.html" />
+  <link rel="stylesheet" href="outfit.css" />
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="wrap">
+      <a class="brand" href="index.html">JOSSA ATHLETICS</a>
+      <nav class="navlinks">
+        <a href="index.html#inicio">Inicio</a>
+        <a href="index.html#colecciones">Colecciones</a>
+        <a href="index.html#contacto">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="page-hero">
+    <div class="wrap product-layout">
+      <div class="product-gallery-panel" id="galeria">
+        <div class="gallery-head gallery-head--product">
+          <span class="section-kicker">Drop FAITH</span>
+          <h2>Vista principal</h2>
+          <p id="product-gallery-copy">Faith Mujer en negro. Crop top limpio con short de compresion y una silueta fuerte para gym, calle y contenido.</p>
+        </div>
+
+        <div class="nova-gallery" id="product-gallery">
+          <div class="nova-main photo">
+            <img id="product-main-image" src="images/upcoming-drop/upcoming-drop-15.jpg" alt="Faith Mujer Negro 01" />
+          </div>
+          <div class="nova-thumbs" id="product-thumbs" role="tablist" aria-label="Miniaturas de Faith Mujer"></div>
+        </div>
+      </div>
+
+      <div class="product-summary">
+        <span class="product-eyebrow">Para Ella / Crop top set</span>
+        <h1>FAITH MUJER</h1>
+        <p class="product-intro">La version de mujer del drop FAITH. Un fit firme, limpio y directo con crop top y short listos para verse premium en movimiento.</p>
+        <div class="product-detail-list" aria-label="Detalles del producto">
+          <div><strong>Uso</strong><span>Training y lifestyle</span></div>
+          <div><strong>Fit</strong><span>Compresion comoda</span></div>
+          <div><strong>Colores</strong><span>Negro y blanco</span></div>
+        </div>
+        <p class="price-tag">Precio: $269</p>
+
+        <div class="color-row color-row--spacious">
+          <div class="color-selected">Color seleccionado: <strong id="product-color-value">Negro</strong></div>
+          <div class="aura-colors" role="tablist" aria-label="Colores de Faith Mujer">
+            <button class="aura-color aura-color--negro is-active" type="button" data-color="negro">Negro</button>
+            <button class="aura-color aura-color--blanco" type="button" data-color="blanco">Blanco</button>
+          </div>
+        </div>
+
+        <div class="size-row">
+          <div class="size-picker" data-selected="M">
+            <div class="size-picker__label">Talla seleccionada: <span class="size-picker__value">M</span></div>
+            <div class="size-picker__options">
+              <button class="size-btn" data-size="S">S</button>
+              <button class="size-btn" data-size="M">M</button>
+              <button class="size-btn" data-size="G">G</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cart-actions cart-actions--split">
+          <button class="btn btn-primary add-to-cart"
+                  data-base-product="FAITH MUJER"
+                  data-product="FAITH MUJER NEGRO"
+                  data-price="269"
+                  data-image="images/upcoming-drop/upcoming-drop-15.jpg">
+            Añadir al carrito
+          </button>
+          <a class="btn btn-ghost"
+             id="faith-mujer-buy-now"
+             target="_blank" rel="noopener"
+             href="https://wa.me/523332510644?text=Hola%20JOSSA%20ATHLETICS%20%F0%9F%91%8B">
+            Compra rápida
+          </a>
+        </div>
+
+        <div class="page-actions page-actions--offset product-summary__actions">
+          <a class="btn btn-ghost" href="para-ella.html">Volver a Para Ella</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <div class="footer-left">
+        <div class="footer-brand">JOSSA ATHLETICS</div>
+        <p>Performance. Lifestyle. Identidad.</p>
+      </div>
+      <div class="footer-right">
+        <a class="social" target="_blank" rel="noopener" href="https://www.instagram.com/jossa_athleticsmx/">Instagram</a>
+        <a class="social" target="_blank" rel="noopener" href="https://www.tiktok.com/@jossa_athletics">TikTok</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.productGalleryConfig = {
+      productName: 'FAITH MUJER',
+      defaultImage: 'images/upcoming-drop/upcoming-drop-15.jpg',
+      defaultVariant: 'negro',
+      defaultCopy: 'Faith Mujer en negro. Crop top limpio con short de compresion y una silueta fuerte para gym, calle y contenido.',
+      colorValueId: 'product-color-value',
+      addToCartSelector: '.add-to-cart[data-base-product]',
+      buyNowSelector: '#faith-mujer-buy-now',
+      buildBuyNowHref(meta) {
+        const msg = [
+          'Hola JOSSA ATHLETICS 👋',
+          `Quiero comprar el outfit FAITH MUJER (${(meta.label || 'NEGRO').toUpperCase()}).`,
+          '',
+          'Datos:',
+          '1) Nombre completo:',
+          '2) Talla:',
+          '3) Ciudad:',
+          '4) Dirección de envío:',
+          '5) Método de pago:'
+        ].join('\n');
+        return `https://wa.me/523332510644?text=${encodeURIComponent(msg)}`;
+      },
+      colors: {
+        negro: {
+          label: 'Negro',
+          product: 'FAITH MUJER NEGRO',
+          copy: 'Faith Mujer en negro. Crop top limpio con short de compresion y una silueta fuerte para gym, calle y contenido.',
+          images: [
+            'images/upcoming-drop/upcoming-drop-15.jpg',
+            'images/upcoming-drop/upcoming-drop-14.jpg',
+            'images/upcoming-drop/upcoming-drop-11.jpg',
+            'images/upcoming-drop/upcoming-drop-10.jpg'
+          ]
+        },
+        blanco: {
+          label: 'Blanco',
+          product: 'FAITH MUJER BLANCO',
+          copy: 'Faith Mujer en blanco. Una lectura mas luminosa del drop, limpia en top y short para un look mas fresco y editorial.',
+          images: [
+            'images/upcoming-drop/upcoming-drop-04.jpg',
+            'images/upcoming-drop/upcoming-drop-05.jpg',
+            'images/upcoming-drop/upcoming-drop-06.jpg'
+          ]
+        }
+      }
+    };
+  </script>
+  <script src="product-gallery.js"></script>
+  <script src="cart.js"></script>
+</body>
+</html>
