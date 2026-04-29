@@ -196,16 +196,56 @@
       if (!thumbsWrap || !colorButtons.length) return;
 
       const fallbackImage = 'images/ella/aura-rosa-01.jpg';
-      // Convención para que solo subas tus fotos:
-      // images/ella/aura-azul-aqua-01.jpg, aura-azul-aqua-02.jpg, aura-azul-aqua-03.jpg ...
-      // images/ella/aura-amarillo-01.jpg, aura-amarillo-02.jpg, aura-amarillo-03.jpg ...
-      // images/ella/aura-blanco-01.jpg, aura-blanco-02.jpg, aura-blanco-03.jpg ...
-      // images/ella/aura-rosa-01.jpg, aura-rosa-02.jpg, aura-rosa-03.jpg ...
-      // images/ella/aura-rosa-palo-01.jpg, aura-rosa-palo-02.jpg, aura-rosa-palo-03.jpg ...
-      // images/ella/aura-negro-01.jpg, aura-negro-02.jpg, aura-negro-03.jpg ...
-      // images/ella/aura-gris-01.jpg, aura-gris-02.jpg, aura-gris-03.jpg ...
-      // images/ella/aura-morado-01.jpg, aura-morado-02.jpg, aura-morado-03.jpg ...
-      // Puedes subir 4, 8, 12, etc. (se detectan automáticamente en orden).
+      const colorImages = {
+        'azul-aqua': [
+          'images/ella/aura-azul-aqua-01.jpg',
+          'images/ella/aura-azul-aqua-02.jpg',
+          'images/ella/aura-azul-aqua-03.jpg',
+          'images/ella/aura-azul-aqua-04.jpg'
+        ],
+        amarillo: [
+          'images/ella/aura-amarillo-01.jpg',
+          'images/ella/aura-amarillo-02.jpg',
+          'images/ella/aura-amarillo-03.jpg',
+          'images/ella/aura-amarillo-04.jpg'
+        ],
+        blanco: [
+          'images/ella/aura-blanco-01.jpg',
+          'images/ella/aura-blanco-02.jpg',
+          'images/ella/aura-blanco-03.jpg',
+          'images/ella/aura-blanco-04.jpg'
+        ],
+        rosa: [
+          'images/ella/aura-rosa-01.jpg',
+          'images/ella/aura-rosa-02.jpg',
+          'images/ella/aura-rosa-03.jpg',
+          'images/ella/aura-rosa-04.jpg'
+        ],
+        'rosa-palo': [
+          'images/ella/aura-rosa-palo-01.jpg',
+          'images/ella/aura-rosa-palo-02.jpg',
+          'images/ella/aura-rosa-palo-03.jpg',
+          'images/ella/aura-rosa-palo-04.jpg'
+        ],
+        negro: [
+          'images/ella/aura-negro-01.jpg',
+          'images/ella/aura-negro-02.jpg',
+          'images/ella/aura-negro-03.jpg',
+          'images/ella/aura-negro-04.jpg'
+        ],
+        gris: [
+          'images/ella/aura-gris-01.jpg',
+          'images/ella/aura-gris-02.jpg',
+          'images/ella/aura-gris-03.jpg',
+          'images/ella/aura-gris-04.jpg'
+        ],
+        morado: [
+          'images/ella/aura-morado-01.jpg',
+          'images/ella/aura-morado-02.jpg',
+          'images/ella/aura-morado-03.jpg',
+          'images/ella/aura-morado-04.jpg'
+        ]
+      };
       const imageCacheByColor = {};
       let colorRequestId = 0;
       let currentColor = 'rosa';
@@ -272,41 +312,9 @@
         }
       };
 
-      const imageExists = (src) =>
-        new Promise((resolve) => {
-          const probe = new Image();
-          probe.onload = () => resolve(true);
-          probe.onerror = () => resolve(false);
-          probe.src = src;
-        });
-
-      const findImageByBase = async (basePath) => {
-        const extensions = ['jpg', 'jpeg', 'png', 'webp'];
-        for (const ext of extensions) {
-          const candidate = `${basePath}.${ext}`;
-          // eslint-disable-next-line no-await-in-loop
-          if (await imageExists(candidate)) return candidate;
-        }
-        return '';
-      };
-
       const resolveColorImages = async (slug) => {
         if (imageCacheByColor[slug]) return imageCacheByColor[slug];
-        const images = [];
-        let misses = 0;
-        const MAX_IMAGES = 40;
-        for (let index = 1; index <= MAX_IMAGES; index += 1) {
-          const base = `images/ella/aura-${slug}-${String(index).padStart(2, '0')}`;
-          // eslint-disable-next-line no-await-in-loop
-          const found = await findImageByBase(base);
-          if (found) {
-            images.push(found);
-            misses = 0;
-          } else if (images.length > 0) {
-            misses += 1;
-            if (misses >= 3) break;
-          }
-        }
+        const images = colorImages[slug] || [];
         imageCacheByColor[slug] = images;
         return images;
       };

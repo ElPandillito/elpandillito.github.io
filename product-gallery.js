@@ -11,6 +11,32 @@
   const colorButtons = Array.from(document.querySelectorAll(config.colorButtonsSelector || '.aura-color[data-color]'));
   const addToCart = config.addToCartSelector ? document.querySelector(config.addToCartSelector) : document.querySelector('.add-to-cart');
   const buyNow = config.buyNowSelector ? document.querySelector(config.buyNowSelector) : null;
+  const preloadPromises = new Map();
+
+  mainImage.decoding = 'async';
+  mainImage.fetchPriority = 'high';
+
+  const preloadImage = (src) => {
+    if (!src) return Promise.resolve('');
+    if (preloadPromises.has(src)) return preloadPromises.get(src);
+
+    const task = new Promise((resolve) => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.onload = () => resolve(src);
+      img.onerror = () => resolve('');
+      img.src = src;
+    });
+
+    preloadPromises.set(src, task);
+    return task;
+  };
+
+  const warmImages = (images = []) => {
+    images.forEach((src) => {
+      preloadImage(src);
+    });
+  };
 
   const imageExists = (src) =>
     new Promise((resolve) => {
@@ -53,6 +79,7 @@
     mainImage.alt = alt || config.defaultAlt || config.productName || 'JOSSA ATHLETICS';
     mainImage.style.objectPosition = pos;
     if (addToCart && src) addToCart.dataset.image = src;
+    preloadImage(src);
   };
 
   const updateCommerce = (meta = {}, images = []) => {
@@ -93,7 +120,7 @@
       thumb.dataset.alt = meta.thumbAltBuilder
         ? meta.thumbAltBuilder(path, index)
         : `${meta.label || config.productName || 'JOSSA ATHLETICS'} ${String(index + 1).padStart(2, '0')}`;
-      thumb.innerHTML = `<img src="${path}" alt="${thumb.dataset.alt}">`;
+      thumb.innerHTML = `<img src="${path}" alt="${thumb.dataset.alt}" loading="lazy" decoding="async">`;
 
       thumb.addEventListener('click', () => {
         Array.from(thumbsWrap.querySelectorAll('.nova-thumb')).forEach((button) => {
@@ -108,6 +135,7 @@
       thumbsWrap.appendChild(thumb);
     });
 
+    warmImages(images);
     setMain(images[0], thumbsWrap.querySelector('.nova-thumb')?.dataset.alt || config.defaultAlt || '');
     updateCommerce(meta, images);
   };
