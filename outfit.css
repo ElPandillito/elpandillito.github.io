@@ -368,6 +368,19 @@
   font-size:.92rem;
   font-weight:650;
 }
+.cart-actions{
+  display:grid;
+  gap:12px;
+  margin-top:16px;
+  max-width:420px;
+}
+.cart-actions--split{
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+}
+.cart-actions .btn{
+  width:100%;
+  min-height:50px;
+}
 .btn:disabled,
 .btn.is-disabled{
   opacity:.55;
@@ -1016,4 +1029,5 @@
 
 @media (max-width: 900px){
   .gallery-grid{ grid-template-columns: 1fr; }
+  .cart-actions--split{ grid-template-columns: 1fr; }
 }
